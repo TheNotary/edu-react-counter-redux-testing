@@ -1,68 +1,70 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
+This project was started via `npx create-react-app react-edu-counter-redux-testing --template redux`
 
-## Available Scripts
+## React Redux Testing
 
-In the project directory, you can run:
+This project was created to quickly demonstrate how to do extremely cheap unit tests that are approximately as extensive as full-fledged integration tests without needing to boot browser emulation frameworks.
 
-### `npm start`
+### The Test
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Let's first touch on what our test is making us *confident* in.  Let's suppose we have a basic UI that looks like this:
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+```
+<div>
+  <button onClick={action.increment}>+</button>
+  <span>0</span>
+  <button onClick={action.decrement}>+</button>
+</div>
+```
 
-### `npm test`
+So we just have 2 buttons, clicking one will make the number in the span go up by one, clicking the other will have the opposite effect.  But we lack confidence in the following:
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- We're worried clicking the '+' button won't trigger the correct action,
+- We're worried that our component won't render the correct values from the start,
+- We're also worried that after clicking the button the component won't update the span number accordingly
 
-### `npm run build`
+We can use `react-testing-library` to build confidence around all of these things extremely concisely!  We just need to write a fancy rendering helper function, and then use `react-testing-library` to fireEvents at our component and perform assertion tests thereafter.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+(test-utils.js)
+```
+/* eslint-disable */
+import React from "react";
+import { render as rtlRender } from "@testing-library/react";
+import { createStore } from "redux";
+import { Provider } from "react-redux";
+import defaultInitialState from "../../redux/reducers/initialState";
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+function render(
+  ui,
+  { initialState = defaultInitialState, reducer, ...renderOptions } = {}
+) {
+  const store = createStore(reducer, initialState);
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+  function Wrapper({ children }) {
+    return <Provider store={store}>{children}</Provider>;
+  }
 
-### `npm run eject`
+  return rtlRender(ui, { wrapper: Wrapper, ...renderOptions });
+}
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+// re-export everything
+export * from "@testing-library/react";
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+// override render method
+export { render };
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+(Counter.test.js)
+```
+test("renders using redux with defaults and increment the count", () => {
+  const { getByText, getByTestId } = render(<Counter />, { reducer });
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+  expect(getByTestId("count-value")).toHaveTextContent("0");
 
-## Learn More
+  fireEvent.click(getByText("+"));
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+  expect(getByTestId("count-value")).toHaveTextContent("1");
+});
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Check out the code and of course run `npm t` to watch the tests pass :)
 
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
