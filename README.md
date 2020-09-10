@@ -1,4 +1,26 @@
-This project was started via `npx create-react-app react-edu-counter-redux-testing --template redux`
+This project was started via:
+
+```
+npx create-react-app react-edu-counter-redux-testing --template redux
+cd react-edu-counter-redux-testing
+npm install --save-dev @testing-library/react
+```
+
+###### (Install bable plugin to package.json)
+
+```
+.
+.
+.
+"babel": {
+  "presets": [
+    "babel-preset-react-app"
+  ]
+}
+.
+.
+.
+```
 
 ## React Redux Testing
 
@@ -6,7 +28,7 @@ This project was created to quickly demonstrate how to do extremely cheap unit t
 
 ### The Test
 
-Let's first touch on what our test is making us *confident* in.  Let's suppose we have a basic UI that looks like this:
+Let's first touch on what our test is making us _confident_ in. Let's suppose we have a basic UI that looks like this:
 
 ```
 <div>
@@ -16,15 +38,16 @@ Let's first touch on what our test is making us *confident* in.  Let's suppose w
 </div>
 ```
 
-So we just have 2 buttons, clicking one will make the number in the span go up by one, clicking the other will have the opposite effect.  But we lack confidence in the following:
+So we just have 2 buttons, clicking one will make the number in the span go up by one, clicking the other will have the opposite effect. But we lack confidence in the following:
 
 - We're worried clicking the '+' button won't trigger the correct action,
 - We're worried that our component won't render the correct values from the start,
 - We're also worried that after clicking the button the component won't update the span number accordingly
 
-We can use `react-testing-library` to build confidence around all of these things extremely concisely!  We just need to write a fancy rendering helper function, and then use `react-testing-library` to fireEvents at our component and perform assertion tests thereafter.
+We can use `react-testing-library` to build confidence around all of these things extremely concisely! We just need to write a fancy rendering helper function, and then use `react-testing-library` to fireEvents at our component and perform assertion tests thereafter.
 
 (test-utils.js)
+
 ```
 /* eslint-disable */
 import React from "react";
@@ -54,6 +77,7 @@ export { render };
 ```
 
 (Counter.test.js)
+
 ```
 test("renders using redux with defaults and increment the count", () => {
   const { getByText, getByTestId } = render(<Counter />, { reducer });
@@ -67,4 +91,3 @@ test("renders using redux with defaults and increment the count", () => {
 ```
 
 Check out the code and of course run `npm t` to watch the tests pass :)
-
