@@ -12,6 +12,12 @@ npm install --save-dev @testing-library/react
 .
 .
 .
+"jest": {
+  "moduleNameMapper": {
+    "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/tools/fileMock.js",
+    "\\.(css|less)$": "<rootDir>/tools/styleMock.js"
+  }
+},
 "babel": {
   "presets": [
     "babel-preset-react-app"
@@ -21,6 +27,11 @@ npm install --save-dev @testing-library/react
 .
 .
 ```
+
+Populate the files:
+
+- `<rootDir>/tools/fileMock.js`
+- `<rootDir>/tools/fileMock.js`
 
 ## React Redux Testing
 

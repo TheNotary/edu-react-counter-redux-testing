@@ -5,10 +5,6 @@ import "@testing-library/jest-dom/extend-expect";
 import { Counter } from "./Counter";
 import counterReducer from "./counterSlice";
 
-// const reducer = {
-//   counter: counterReducer,
-// };
-
 // What does this test?  The redux cycle!
 // - The inital rendered outputs of the component meet expectations
 // - The "+" button is wired up to fire off the expected redux action
