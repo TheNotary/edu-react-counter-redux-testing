@@ -1,6 +1,6 @@
 This project was started via:
 
-```
+```bash
 npx create-react-app react-edu-counter-redux-testing --template redux
 cd react-edu-counter-redux-testing
 npm install --save-dev @testing-library/react
@@ -8,7 +8,7 @@ npm install --save-dev @testing-library/react
 
 ###### (Install bable plugin to package.json)
 
-```
+```javascript
 .
 .
 .
@@ -41,7 +41,7 @@ This project was created to quickly demonstrate how to do extremely cheap unit t
 
 Let's first touch on what our test is making us _confident_ in. Let's suppose we have a basic UI that looks like this:
 
-```
+```html
 <div>
   <button onClick={action.increment}>+</button>
   <span>0</span>
@@ -59,7 +59,7 @@ We can use `react-testing-library` to build confidence around all of these thing
 
 (test-utils.js)
 
-```
+```javascript
 /* eslint-disable */
 import React from "react";
 import { render as rtlRender } from "@testing-library/react";
@@ -89,7 +89,7 @@ export { render };
 
 (Counter.test.js)
 
-```
+```javascript
 test("renders using redux with defaults and increment the count", () => {
   const { getByText, getByTestId } = render(<Counter />, { reducer });
 
